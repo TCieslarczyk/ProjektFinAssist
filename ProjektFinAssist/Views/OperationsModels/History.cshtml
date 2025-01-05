@@ -1,0 +1,79 @@
+﻿@model IEnumerable<ProjektFinAssist.Models.OperationsModel>
+
+@{
+    ViewData["Title"] = "History of operations - ";
+    var categories = ViewBag.CategoryList as List<string>;
+    var types = ViewBag.TypeList as List<string>;
+}
+
+<form method="get" asp-action="History" class="form-inline mb-3">
+    <div class="form-group mr-2">
+        <label for="categoryFilter" class="mr-1">Category:</label>
+        <select id="categoryFilter" name="categoryFilter" class="form-control">
+            <option value="">-- All Categories --</option>
+            @foreach (var category in categories)
+            {
+                <option value="@category">@category</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group mr-2">
+        <label for="typeFilter" class="mr-1">Type:</label>
+        <select id="typeFilter" name="typeFilter" class="form-control">
+            <option value="">-- All Types --</option>
+            @foreach (var type in types)
+            {
+                <option value="@type">@type</option>
+            }
+        </select>
+    </div>
+
+    <div class="form-group mr-2">
+        <label for="startDate" class="mr-1">Start Date:</label>
+        <input type="date" id="startDate" name="startDate" class="form-control" />
+    </div>
+
+    <div class="form-group mr-2">
+        <label for="endDate" class="mr-1">End Date:</label>
+        <input type="date" id="endDate" name="endDate" class="form-control" />
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Filter</button>
+    <a asp-action="History" class="btn btn-secondary ml-2">Clear Filters</a>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Category)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Amount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Date)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Category)</td>
+                <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                <td>@Html.DisplayFor(modelItem => item.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Amount)</td>
+                <td>@Html.DisplayFor(modelItem => item.Date)</td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,87 @@
+﻿@{
+    var expenseSumsByCategory = ViewBag.ExpenseSumsByCategory as IEnumerable<dynamic>;
+}
+
+<div>
+    <h3>Total expenses filtered by category</h3>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Total amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (expenseSumsByCategory != null)
+            {
+                foreach (var item in expenseSumsByCategory)
+                {
+                    <tr>
+                        <td>@item.Category</td>
+                        <td>@item.TotalAmount.ToString("C")</td>
+                    </tr>
+                }
+            }
+            else
+            {
+                <tr>
+                    <td colspan="2">No data</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div style="display: flex; justify-content: center; align-items: center; height: 400px;">
+        <canvas id="expensesPieChart" width="300" height="300"></canvas>
+    </div>
+
+    @section Scripts {
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script>
+            const tableRows = document.querySelectorAll('table tbody tr');
+            const labels = [];
+            const amounts = [];
+
+            tableRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 2) {
+                    labels.push(cells[0].innerText);
+
+                    const cleanedAmount = cells[1].innerText
+                        .replace(/\s/g, '')
+                        .replace(/zł/g, '')
+                        .replace(/,/g, '.');
+
+                    amounts.push(parseFloat(cleanedAmount));
+                }
+            });
+
+            const ctx = document.getElementById('expensesPieChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: amounts,
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)',
+                            'rgba(54, 162, 235, 0.6)',
+                            'rgba(255, 206, 86, 0.6)',
+                            'rgba(75, 192, 192, 0.6)',
+                            'rgba(153, 102, 255, 0.6)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        </script>
+    }
+</div>
